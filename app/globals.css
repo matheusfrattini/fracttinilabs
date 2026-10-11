@@ -1,0 +1,63 @@
+@import "tailwindcss";
+@import "@fontsource-variable/bricolage-grotesque";
+
+/*
+  ============================================================
+  TOKENS DA MARCA
+  ------------------------------------------------------------
+  As cores abaixo são PROVISÓRIAS (azul-marinho + laranja, que
+  era a base dos materiais anteriores da fracttini.labs).
+  Quando a logo final sair do Canva, troque só os hex desta
+  lista: o site inteiro acompanha.
+  Regra combinada: laranja (accent) aparece pouco — só em
+  indicador de item ativo, foco e detalhes pequenos.
+  ============================================================
+*/
+@theme {
+  --color-paper: #f4f6f9;     /* fundo geral (claro, frio) */
+  --color-surface: #ffffff;   /* blocos e painéis */
+  --color-ink: #121a2b;       /* texto principal */
+  --color-muted: #566078;     /* texto secundário */
+  --color-line: #dce1ea;      /* bordas e divisórias */
+  --color-brand: #1f3a6e;     /* PROVISÓRIO: cor principal da logo */
+  --color-brand-soft: #e6ecf6;/* brand bem clarinho p/ fundos */
+  --color-accent: #e8742f;    /* PROVISÓRIO: laranja, uso mínimo */
+  --color-ok: #1f8a5b;        /* status "no ar" */
+
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 1.25rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 650;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  p { text-wrap: pretty; }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  ::selection { background: var(--color-brand); color: #fff; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
