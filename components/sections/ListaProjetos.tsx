@@ -6,6 +6,7 @@ import Link from "next/link";
 import { categorias, type Categoria, type Projeto } from "@/content/projetos";
 import { Selo } from "@/components/ui/Selo";
 import { TelaProjeto } from "@/components/ui/TelaProjeto";
+import { Moldura } from "@/components/ui/Moldura";
 
 type Filtro = Categoria | "todos";
 
@@ -39,10 +40,10 @@ export function ListaProjetos({ projetos, mostrarRascunho }: { projetos: Projeto
               role="tab"
               aria-selected={filtro === c.id}
               onClick={() => setFiltro(c.id)}
-              className="relative min-h-10 whitespace-nowrap rounded-full px-4 text-[15px] text-muted transition-colors aria-selected:text-white"
+              className="aperta relative min-h-11 whitespace-nowrap rounded-full px-4 text-[15px] text-muted transition-colors aria-selected:text-paper"
             >
               {filtro === c.id && (
-                <motion.span layoutId="filtro-ativo" className="absolute inset-0 -z-0 rounded-full bg-brand" transition={{ type: "spring", stiffness: 420, damping: 36 }} />
+                <motion.span layoutId="filtro-ativo" className="absolute inset-0 -z-0 rounded-full bg-ink" transition={{ type: "spring", stiffness: 420, damping: 36 }} />
               )}
               <span className="relative">{c.rotulo}</span>
             </button>
@@ -91,7 +92,7 @@ function Caso({ projeto: p, aberto, alternar, rascunho }: { projeto: Projeto; ab
         className="grid w-full gap-4 p-5 text-left sm:grid-cols-[220px_1fr_auto] sm:items-center sm:gap-6"
       >
         <div className="overflow-hidden rounded-xl ring-1 ring-line">
-          <TelaProjeto src={p.telas[0]} nome={p.nome} />
+          <Moldura src={p.telas[0]} nome={p.nome} />
         </div>
         <div className="min-w-0">
           <div className="mb-2 flex flex-wrap items-center gap-2">
@@ -162,7 +163,7 @@ function Caso({ projeto: p, aberto, alternar, rascunho }: { projeto: Projeto; ab
                     Abrir o projeto
                   </a>
                 )}
-                <Link href={`/contato/?sobre=${p.slug}`} className="inline-flex min-h-12 items-center justify-center rounded-full bg-brand px-6 font-medium text-white hover:bg-ink">
+                <Link href={`/contato/?sobre=${p.slug}`} className="inline-flex min-h-12 items-center justify-center rounded-full bg-brand px-6 font-medium text-on-brand hover:bg-ink">
                   Quero algo assim
                 </Link>
               </div>

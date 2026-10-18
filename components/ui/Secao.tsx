@@ -11,11 +11,11 @@ type Props = {
 /** Container padrão de seção: largura, respiro lateral (16px no celular) e título. */
 export function Secao({ id, titulo, intro, children, className = "" }: Props) {
   return (
-    <section id={id} className={`mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 md:py-24 ${className}`}>
+    <section id={id} className={`mx-auto w-full max-w-6xl px-4 py-24 sm:px-6 md:py-36 ${className}`}>
       {titulo && (
-        <header className="mb-10 max-w-2xl md:mb-14">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl">{titulo}</h2>
-          {intro && <p className="mt-4 text-lg text-muted">{intro}</p>}
+        <header className="mb-14 md:mb-20">
+          <h2 className="titulo-secao max-w-3xl">{titulo}</h2>
+          {intro && <p className="texto-leitura mt-5 text-lg text-muted">{intro}</p>}
         </header>
       )}
       {children}

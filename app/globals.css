@@ -1,33 +1,47 @@
 @import "tailwindcss";
-@import "@fontsource-variable/bricolage-grotesque";
 
 /*
   ============================================================
-  TOKENS DA MARCA
+  TOKENS DA MARCA — tema escuro
   ------------------------------------------------------------
-  As cores abaixo são PROVISÓRIAS (azul-marinho + laranja, que
-  era a base dos materiais anteriores da fracttini.labs).
-  Quando a logo final sair do Canva, troque só os hex desta
-  lista: o site inteiro acompanha.
-  Regra combinada: laranja (accent) aparece pouco — só em
-  indicador de item ativo, foco e detalhes pequenos.
+  Cores tiradas da logo 3D (infinity-logo): azul neon, verde,
+  laranja e cromado. Azul é a cor principal; verde e laranja
+  aparecem pouco (status, detalhes, nós do fundo).
   ============================================================
 */
 @theme {
-  --color-paper: #f4f6f9;     /* fundo geral (claro, frio) */
-  --color-surface: #ffffff;   /* blocos e painéis */
-  --color-ink: #121a2b;       /* texto principal */
-  --color-muted: #566078;     /* texto secundário */
-  --color-line: #dce1ea;      /* bordas e divisórias */
-  --color-brand: #1f3a6e;     /* PROVISÓRIO: cor principal da logo */
-  --color-brand-soft: #e6ecf6;/* brand bem clarinho p/ fundos */
-  --color-accent: #e8742f;    /* PROVISÓRIO: laranja, uso mínimo */
-  --color-ok: #1f8a5b;        /* status "no ar" */
+  /* --- superfícies --- */
+  --color-paper: #090a0d;      /* fundo geral — quase preto, cast frio da marca */
+  --color-surface: #111216;    /* blocos e painéis */
+  --color-surface-2: #17191f;  /* painel elevado */
 
-  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  /* --- texto --- */
+  --color-ink: #ededee;        /* principal — branco 92% */
+  --color-muted: #8a8c92;      /* secundário — branco 55%, passa AA em 16px */
+
+  /* --- bordas --- */
+  --color-line: rgb(255 255 255 / 0.08);     /* padrão: branco 8% */
+  --color-line-forte: rgb(255 255 255 / 0.16); /* hover de card */
+
+  /* --- cores da logo (identidade) --- */
+  --color-brand: #4fa3ff;      /* azul neon — cor principal */
+  --color-on-brand: #06101f;   /* texto em cima do azul */
+  --color-brand-soft: #12223f; /* azul bem escuro p/ fundos */
+  --color-ok: #19b36b;         /* verde — status "no ar" */
+  --color-accent: #f2821f;     /* laranja — ACENTO PONTUAL, 1 detalhe por tela */
+  --color-accent-ink: #ffb067; /* laranja claro — só p/ TEXTO pequeno sobre escuro */
+  --color-chrome: #c9d2e3;     /* cromado */
+  --color-erro: #ff8a7a;       /* erro de formulário */
+
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 
+  /* Cards 16–24px; botões sempre em pílula (rounded-full). */
   --radius-card: 1.25rem;
+
+  /* Sombra sempre difusa, nunca dura. */
+  --shadow-suave: 0 4px 20px -5px rgb(0 0 0 / 0.5);
+  --shadow-alta: 0 24px 60px -28px rgb(0 0 0 / 0.8);
 }
 
 @layer base {
@@ -35,29 +49,222 @@
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
   }
+  html { color-scheme: dark; background: var(--color-paper); }
+  /* Nada pode criar rolagem horizontal. "clip" (e não "hidden") para o
+     header sticky e o fundo fixed seguirem funcionando. */
+  html, body { overflow-x: clip; }
   body {
-    background: var(--color-paper);
     color: var(--color-ink);
     font-family: var(--font-sans);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
+  /* Títulos: leves e apertados — o acabamento vem do tamanho e do
+     espaço em volta, não do peso. */
   h1, h2, h3 {
     font-family: var(--font-display);
-    font-weight: 650;
-    line-height: 1.08;
-    letter-spacing: -0.02em;
+    font-weight: 350;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
     text-wrap: balance;
   }
+  h1 { letter-spacing: -0.04em; }
   p { text-wrap: pretty; }
   :focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-brand);
     outline-offset: 3px;
     border-radius: 6px;
   }
-  ::selection { background: var(--color-brand); color: #fff; }
+  ::selection { background: var(--color-brand); color: var(--color-on-brand); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+/* ---------- Fundo quadriculado "sistema" ---------- */
+.fundo-grade {
+  --tam: 64px;
+  background-image:
+    linear-gradient(to right, rgb(79 163 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(79 163 255 / 0.05) 1px, transparent 1px);
+  background-size: var(--tam) var(--tam);
+  background-position: center top;
+  /* esmaece nas bordas: a grade existe, mas nunca briga com o texto */
+  -webkit-mask-image: radial-gradient(ellipse 85% 70% at 50% 35%, #000 20%, transparent 100%);
+  mask-image: radial-gradient(ellipse 85% 70% at 50% 35%, #000 20%, transparent 100%);
+}
+/* Mesma grade, mais forte, só em volta do cursor */
+.fundo-grade-luz {
+  --tam: 64px;
+  background-image:
+    linear-gradient(to right, rgb(79 163 255 / 0.22) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(79 163 255 / 0.22) 1px, transparent 1px);
+  background-size: var(--tam) var(--tam);
+  background-position: center top;
+  -webkit-mask-image: radial-gradient(220px circle at var(--mx, -999px) var(--my, -999px), #000 0%, transparent 70%);
+  mask-image: radial-gradient(220px circle at var(--mx, -999px) var(--my, -999px), #000 0%, transparent 70%);
+}
+
+/* ============================================================
+   CAMADA DE INTERAÇÃO — adicionada no redesign
+   ============================================================ */
+
+/* ---------- Lenis (scroll suave) ---------- */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+/* Com "reduzir movimento" o Lenis nem é montado; isto é só garantia. */
+@media (prefers-reduced-motion: reduce) {
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+}
+
+/* ---------- Header liquid glass ----------
+   backdrop-filter com blur + saturação. O fallback (sem suporte)
+   usa fundo sólido semitransparente, declarado ANTES do @supports. */
+.vidro {
+  background: rgb(9 10 13 / 0.96); /* fallback sólido, sem backdrop-filter */
+  border: 1px solid rgb(255 255 255 / 0.08);
+  box-shadow: var(--shadow-suave);
+}
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .vidro {
+    background: rgb(9 10 13 / 0.8);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
+    backdrop-filter: blur(12px) saturate(160%);
+  }
+}
+
+/* ---------- #12 Sublinhado animado em links ---------- */
+.sublinha {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: background-size 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sublinha:hover, .sublinha:focus-visible { background-size: 100% 1px; }
+@media (prefers-reduced-motion: reduce) {
+  .sublinha { transition: none; }
+  .sublinha:hover, .sublinha:focus-visible { background-size: 100% 1px; }
+}
+
+/* ---------- Glitch sutil (hero) ---------- */
+.glitch { position: relative; display: inline-block; }
+.glitch::before, .glitch::after {
+  content: attr(data-texto);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  clip-path: inset(0 0 0 0);
+}
+.glitch::before { color: var(--color-brand); animation: glitch-a 4.2s steps(1) infinite; }
+.glitch::after  { color: var(--color-ok);    animation: glitch-b 4.2s steps(1) infinite; }
+
+@keyframes glitch-a {
+  0%, 88%, 100% { transform: none; opacity: 0; clip-path: inset(0 0 100% 0); }
+  89%  { opacity: .75; transform: translate(-2px, -1px); clip-path: inset(10% 0 62% 0); }
+  91%  { opacity: .75; transform: translate(2px, 1px);   clip-path: inset(55% 0 22% 0); }
+  93%  { opacity: 0; }
+}
+@keyframes glitch-b {
+  0%, 88%, 100% { transform: none; opacity: 0; clip-path: inset(0 0 100% 0); }
+  90%  { opacity: .6; transform: translate(2px, 1px);   clip-path: inset(35% 0 40% 0); }
+  92%  { opacity: .6; transform: translate(-2px, -1px); clip-path: inset(70% 0 8% 0); }
+  94%  { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glitch::before, .glitch::after { animation: none; opacity: 0; }
+}
+
+/* ---------- Cursor da digitação recorrente ---------- */
+.cursor-digita {
+  display: inline-block;
+  width: 1px;
+  background: var(--color-brand);
+  animation: pisca 1.05s steps(1) infinite;
+}
+@keyframes pisca { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .cursor-digita { animation: none; opacity: 1; } }
+
+/* ---------- Glitch da logo 3D (raro e curto) ---------- */
+.glitch-logo { animation: glitch-logo 7.5s steps(1) infinite; will-change: transform, filter; }
+@keyframes glitch-logo {
+  0%, 92%, 100% { transform: none; filter: none; }
+  93%  { transform: translate3d(-3px, 1px, 0); filter: hue-rotate(25deg) saturate(1.4); }
+  94%  { transform: translate3d(3px, -1px, 0); filter: hue-rotate(-20deg) saturate(1.2); }
+  95%  { transform: translate3d(-1px, 0, 0);   filter: none; }
+}
+@media (prefers-reduced-motion: reduce) { .glitch-logo { animation: none; } }
+
+
+/* ============================================================
+   ACABAMENTO — tipografia grande e leve, glow, hover de card
+   ============================================================ */
+
+/* Título de herói: cresce com a tela sem nunca estourar no celular. */
+.titulo-heroi {
+  font-size: clamp(2.75rem, 6vw, 4.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+/* Título de seção, um degrau abaixo. */
+.titulo-secao {
+  font-size: clamp(2rem, 4.2vw, 3.25rem);
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+}
+/* Texto corrido: nunca passa de ~60ch, que é onde a leitura cansa. */
+.texto-leitura { max-width: 60ch; }
+
+/* Glow de gradiente atrás de imagem/moldura, nas cores da marca.
+   Fica ATRÁS (-z-10) e é sempre decorativo. */
+.glow-marca {
+  position: absolute;
+  inset: -16% 0 -10%;
+  z-index: -10;
+  border-radius: 50%;
+  filter: blur(68px);
+  opacity: 0.5;
+  background:
+    radial-gradient(42% 60% at 28% 42%, rgb(79 163 255 / 0.9), transparent 70%),
+    radial-gradient(38% 52% at 72% 58%, rgb(25 179 107 / 0.55), transparent 70%);
+  pointer-events: none;
+}
+@media (max-width: 640px) {
+  .glow-marca { filter: blur(48px); opacity: 0.4; }
+}
+
+/* Hover de card: sobe de leve e a borda clareia. */
+.card-hover {
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .card-hover:hover { transform: scale(1.02); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-hover { transition: none; }
+  .card-hover:hover { transform: none; }
+}
+
+/* Clique de botão: 0.98. */
+.aperta { transition: transform 140ms ease-out; }
+.aperta:active { transform: scale(0.98); }
+@media (prefers-reduced-motion: reduce) {
+  .aperta, .aperta:active { transition: none; transform: none; }
+}
+
+/* ---------- Cursor do typewriter (componente Maquina) ---------- */
+.cursor-maquina {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.15em;
+  background: var(--color-brand);
+  animation: pisca 1.05s steps(1) infinite;
+}
+@media (prefers-reduced-motion: reduce) { .cursor-maquina { display: none; } }

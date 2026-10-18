@@ -5,7 +5,7 @@
  */
 export function Logo({ claro = false }: { claro?: boolean }) {
   return (
-    <span className={`font-display text-xl font-bold tracking-tight ${claro ? "text-white" : "text-ink"}`}>
+    <span className={`font-display text-xl font-medium tracking-[-0.03em] ${claro ? "text-white" : "text-ink"}`}>
       fracttini<span className={claro ? "text-white/60" : "text-brand"}>.labs</span>
     </span>
   );

@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"name": "fracttinilabs-portifolio",
+			"path": ".."
+		},
+		{
+			"name": "projetos-fracttini",
+			"path": "../../projetos-fracttini"
+		},
+		{
+			"name": "endorfina-hub",
+			"path": "../../../Downloads/endorfina-hub (1)/endorfina-hub"
+		},
+		{
+			"path": "../../../Downloads/referencias-fracttini"
+		}
+	],
+	"settings": {}
+}

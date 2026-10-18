@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
 import { navegacao } from "@/content/site";
 import { Logo } from "./Logo";
 
@@ -11,46 +11,62 @@ function ativo(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname.startsWith(href.replace(/\/$/, ""));
 }
 
+/**
+ * Header "liquid glass" (.vidro em globals.css: blur + saturação, com
+ * fallback sólido quando o navegador não suporta backdrop-filter).
+ *
+ * Comportamento: some ao rolar PARA BAIXO e volta ao rolar PARA CIMA.
+ * No topo da página fica transparente. Com o menu aberto nunca some.
+ */
 export function Header() {
   const pathname = usePathname();
   const [aberto, setAberto] = useState(false);
   const [rolou, setRolou] = useState(false);
+  const [escondido, setEscondido] = useState(false);
+  const { scrollY } = useScroll();
 
   useEffect(() => setAberto(false), [pathname]);
-  useEffect(() => {
-    const onScroll = () => setRolou(window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+
+  useMotionValueEvent(scrollY, "change", (y) => {
+    const anterior = scrollY.getPrevious() ?? 0;
+    setRolou(y > 8);
+    if (aberto) { setEscondido(false); return; }
+    if (y > anterior && y > 120) setEscondido(true);
+    else if (y < anterior) setEscondido(false);
+  });
+
   useEffect(() => {
     document.body.style.overflow = aberto ? "hidden" : "";
   }, [aberto]);
 
   return (
-    <header
-      className={`sticky top-0 z-40 transition-[background,box-shadow] duration-300 ${
-        rolou || aberto ? "bg-paper/90 shadow-[0_1px_0_var(--color-line)] backdrop-blur-md" : "bg-transparent"
-      }`}
+    <motion.header
+      className="sticky top-4 z-40 mx-4 sm:mx-6"
+      animate={{ y: escondido ? "-130%" : "0%" }}
+      transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" aria-label="fracttini.labs — início">
+      <div
+        className={`mx-auto flex h-16 max-w-6xl items-center justify-between rounded-full pr-2 pl-5 transition-colors duration-300 sm:pr-2.5 sm:pl-6 ${
+          rolou || aberto ? "vidro" : "border border-line bg-transparent"
+        }`}
+      >
+        <Link href="/" aria-label="fracttini.labs — início" className="inline-flex min-h-11 shrink-0 items-center">
           <Logo />
         </Link>
 
         {/* Navegação no computador */}
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Principal">
+        <nav className="hidden items-center gap-0.5 lg:flex" aria-label="Principal">
           {navegacao.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="relative rounded-full px-4 py-2 text-[15px] text-muted transition-colors hover:text-ink aria-[current=page]:text-ink"
+              className="relative inline-flex min-h-11 items-center rounded-full px-3.5 text-[15px] text-muted transition-colors hover:text-ink aria-[current=page]:text-ink"
               aria-current={ativo(pathname, item.href) ? "page" : undefined}
             >
               {ativo(pathname, item.href) && (
                 <motion.span
                   layoutId="nav-ativo"
-                  className="absolute inset-0 -z-10 rounded-full bg-surface ring-1 ring-line"
+                  className="absolute inset-0 -z-10 rounded-full bg-white/[0.07] ring-1 ring-line"
                   transition={{ type: "spring", stiffness: 400, damping: 34 }}
                 />
               )}
@@ -59,7 +75,7 @@ export function Header() {
           ))}
           <Link
             href="/contato/"
-            className="ml-3 inline-flex min-h-10 items-center rounded-full bg-brand px-5 text-[15px] font-medium text-white transition-colors hover:bg-ink"
+            className="aperta ml-3 inline-flex min-h-11 items-center rounded-full bg-ink px-5 text-[15px] font-medium text-paper transition-colors hover:bg-white"
           >
             Nos conta o problema
           </Link>
@@ -68,7 +84,7 @@ export function Header() {
         {/* Botão do menu no celular */}
         <button
           type="button"
-          className="-mr-2 grid size-12 place-items-center md:hidden"
+          className="-mr-1 grid size-12 shrink-0 place-items-center rounded-full lg:hidden"
           aria-expanded={aberto}
           aria-controls="menu-mobile"
           aria-label={aberto ? "Fechar menu" : "Abrir menu"}
@@ -86,7 +102,7 @@ export function Header() {
           <motion.nav
             id="menu-mobile"
             aria-label="Menu"
-            className="fixed inset-x-0 top-16 bottom-0 bg-paper px-4 pt-6 md:hidden"
+            className="vidro fixed inset-x-4 top-24 bottom-4 overflow-y-auto rounded-[1.5rem] px-5 pt-4 pb-8 lg:hidden"
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
@@ -103,7 +119,7 @@ export function Header() {
                 >
                   <Link
                     href={item.href}
-                    className="flex min-h-16 items-center font-display text-3xl font-semibold"
+                    className="flex min-h-16 items-center font-display text-3xl"
                     aria-current={ativo(pathname, item.href) ? "page" : undefined}
                   >
                     {item.rotulo}
@@ -113,13 +129,13 @@ export function Header() {
             </ul>
             <Link
               href="/contato/"
-              className="mt-8 flex min-h-14 items-center justify-center rounded-full bg-brand text-lg font-medium text-white"
+              className="aperta mt-8 flex min-h-14 items-center justify-center rounded-full bg-ink text-lg font-medium text-paper"
             >
               Nos conta o problema
             </Link>
           </motion.nav>
         )}
       </AnimatePresence>
-    </header>
+    </motion.header>
   );
 }

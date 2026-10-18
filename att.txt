@@ -1,0 +1,166 @@
+# Prompt para o Claude Code — Redesign do site da fracttini.labs
+
+> Itens marcados com **[CONFIRMAR]** ainda não foram decididos. Troque pela decisão antes de colar, ou apague o que não for usar.
+
+---
+
+## Contexto
+
+Você vai trabalhar no site/portfólio da **fracttini.labs**, uma empresa de Campinas que entrega **gestão (dashboards + IA), web design e automações** para microempreendedores, microempresas e PJs.
+
+- **Público:** jovens microempreendedores e PJs começando.
+- **Origem do tráfego:** Instagram. Por isso, o celular é a tela principal.
+- **Posicionamento:** "valor, não preço". A ideia é entender a dor do cliente e resolver problemas que ele nem percebeu que tem.
+
+## Como trabalhar comigo
+
+- **Faça uma etapa por vez.** Ao terminar cada etapa, pare, mostre o que mudou e espere minha validação.
+- **Antes de escrever código**, leia o projeto atual e me responda:
+  - qual é a stack (framework, Tailwind, libs de animação já instaladas);
+  - o que já existe de páginas e componentes;
+  - seu plano para as etapas abaixo.
+- **Não invente conteúdo real:** depoimentos, nomes de clientes, números. Onde faltar conteúdo, use um placeholder bem visível, por exemplo `[DEPOIMENTO PENDENTE]`.
+- Se algo deste prompt estiver ambíguo, pergunte antes de decidir.
+
+## Referências anexadas
+
+| Arquivo | O que usar dele |
+|---|---|
+| `01-cards-servico-dixor-hover.png` | Cards de tipo de projeto que se revelam no hover (padrão #08 do PDF) |
+| `02-rodape-axis.png` | Estrutura do rodapé |
+| `03-preview-projeto-navegador.png` | Print de cada projeto dentro de uma moldura de navegador |
+| `04-secao-innovation-x-vision.png` | **[CONFIRMAR: o que usar desta referência e em que seção]** |
+| `05-motions-template-dixor.pdf` | Análise técnica de 12 motions. Usar os listados em "Motions do PDF" |
+
+Use as referências só como **padrão de layout e de interação**. Não copie textos, imagens, logos ou assets dos templates.
+
+---
+
+## Direção visual (já decidida)
+
+- Fundo escuro, com fundo quadriculado estilo "sistema".
+- Logo 3D da fracttini.labs.
+- Elementos soltos que parecem ter "vida própria", com movimento sutil e contínuo.
+- Visual jovem e um pouco gamificado, sem perder o profissional.
+- Paleta: as mesmas cores da logo, usando pouco o laranja.
+- Sem preços em nenhum lugar.
+- Sem seção de equipe. O site só diz que a equipe é toda de Campinas e fala em entregas bem feitas, sem citar tempo de mercado.
+- Tipografia: **[CONFIRMAR: fontes de título e de texto]**
+
+## Estrutura de páginas
+
+1. **Home**
+2. **Uma página por tipo de projeto**: **[CONFIRMAR: Sites, Dashboards e Automações?]**
+3. **"Nos conta o problema"**: a página do formulário. Não existe item "Contato" no menu.
+
+---
+
+## Componentes globais
+
+### Header — liquid glass
+- Barra de navegação com efeito de vidro: `backdrop-filter` com blur e saturação, fundo translúcido, borda fina clara e um brilho sutil.
+- Some quando o usuário rola a página para baixo. **[CONFIRMAR: reaparece ao rolar para cima?]**
+- Precisa de fallback quando o navegador não suportar `backdrop-filter`: um fundo sólido semitransparente.
+
+### Rodapé (ref. `02-rodape-axis.png`)
+- Bloco centralizado com a logo da fracttini.labs, os links das páginas, os ícones das redes sociais e a linha de copyright.
+- Uma linha divisória e, abaixo dela, uma barra inferior.
+  - **[CONFIRMAR: o que vai na esquerda (ex.: botão de WhatsApp) e na direita da barra inferior]**
+- Redes sociais: **[CONFIRMAR: quais (Instagram, LinkedIn, WhatsApp…)]**
+
+### Scroll suave ("rolar de forma harmônica")
+- Use **Lenis** (`lenis/react`) integrado ao loop de frames do Motion, como no exemplo oficial do Motion (motion.dev/examples/react-lenis-smooth-scroll):
+  - `ReactLenis root` com `autoRaf: false`;
+  - `frame.setup` chamando `lenis.raf`.
+- Os links de âncora devem usar `lenis.scrollTo`.
+
+### Texto animado — Special Text (Spell UI)
+- Componente de texto com efeito scramble da biblioteca Spell UI (21st.dev/@tom_ui). Depende de `motion`.
+- Instalação: `npx shadcn@latest add "https://21st.dev/r/tom_ui/special-text?api_key=$API_KEY_21ST"`. A chave é minha; peça quando chegar nessa etapa. Ou pegue o código do repositório `github.com/xxtomm/spell-ui`.
+- Props: `children`, `speed` (padrão 20), `delay` (padrão 0), `className`, `inView`.
+- Onde aplicar: **[CONFIRMAR: em todo texto do site ou só em títulos e rótulos?]**
+  - Minha sugestão é usar em títulos e rótulos, com `inView`. Em parágrafos, o embaralhamento atrapalha a leitura.
+
+### Acessibilidade de movimento (obrigatório)
+- Com `prefers-reduced-motion: reduce`, desligue o scramble, o glitch, a digitação, os elementos flutuantes e o Lenis. Mostre o texto final direto.
+- O próprio PDF da Dixor aponta que as animações de lá ignoram essa preferência. Não repita esse erro.
+
+---
+
+## Home — seções em ordem
+
+1. **Hero**
+   - Frase principal curta e impactante, animada com Special Text. Proponha 3 opções de frase a partir do posicionamento acima.
+   - Um efeito **glitch** sutil. **[CONFIRMAR: onde — na frase, na logo 3D ou nos dois?]**
+   - Uma linha de **digitação recorrente**, que escreve, apaga e troca frases curtas. **[CONFIRMAR: frases]**
+   - Logo 3D e elementos soltos animados.
+   - Botão principal levando a "Nos conta o problema".
+2. **Tipos de projeto** (ref. `01` e motion **#08** do PDF)
+   - Um card por tipo de projeto. Cada card explica a funcionalidade básica e leva à página daquele tipo.
+   - Adaptar o padrão do PDF para o tema escuro:
+     - parado, mostra ícone, título e botão;
+     - no hover, o título sobe e a descrição aparece com 0,1s de atraso;
+     - um card já começa aberto.
+   - No celular não existe hover: todos os cards mostram a descrição aberta.
+3. **Projetos em destaque** (ref. `03`)
+   - Cada projeto aparece como um print da tela dentro de uma moldura de navegador.
+   - Regra do portfólio:
+     - projeto **finalizado** entra como demo com dados fictícios;
+     - projeto **em andamento** entra como link para o GitHub Pages dele (hoje, só o Street Fest 019);
+     - demos de empresas grandes aparecem com nomes e números trocados.
+4. **[CONFIRMAR: seção inspirada em `04-secao-innovation-x-vision.png` — uso e conteúdo]**
+   - Referência de layout: título grande com um conector em itálico e cinza, imagem à esquerda, e à direita blocos de texto com rótulo pequeno em caixa alta separados por linhas.
+5. **Feedbacks**
+   - Depoimentos **reais** de clientes. Até eu passar os textos, use `[DEPOIMENTO PENDENTE]`. Nunca escreva depoimentos fictícios.
+6. **Chamada final** para "Nos conta o problema".
+7. **Rodapé**
+
+## Páginas de tipo de projeto
+
+- Um hero do tipo, com título em Special Text.
+- Uma explicação da funcionalidade básica: o que resolve e para quem é.
+- Os projetos daquele tipo, com preview na moldura de navegador.
+- Uma chamada para "Nos conta o problema".
+
+## Página "Nos conta o problema" — formulário mais completo
+
+- Campos: **[CONFIRMAR: ex.: nome, WhatsApp, e-mail, tipo de negócio, qual problema quer resolver, tipo de projeto]**
+- Validação no próprio campo, máscara de telefone brasileiro, estado de envio, mensagem de sucesso e mensagem de erro.
+- Para onde vai o envio: **[CONFIRMAR: e-mail, planilha, WhatsApp, banco de dados?]**
+
+---
+
+## Motions do PDF a usar
+
+- **#08 Cards de serviço**: obrigatório.
+- **[CONFIRMAR quais destes entram]**:
+  - #04 botão com seta que cresce no hover
+  - #07 texto que "pinta" com o scroll
+  - #12 sublinhado animado em links
+  - #01 título letra por letra
+- **Não usar** a #06 (navbar fixa do Dixor), porque o header aqui é o liquid glass descrito acima.
+
+**Stack de animação:** use Motion (`motion/react`) + CSS como base. Evite empilhar várias libs de animação, como o Dixor faz com quatro. Só adicione GSAP se alguma animação realmente depender de scroll com pin.
+
+## Regras técnicas
+
+- Mobile first. Nada de scroll horizontal no celular. Margem lateral de 16px no celular.
+- Imagens otimizadas e com lazy load, principalmente os prints dos projetos.
+- Contraste adequado no tema escuro, foco visível no teclado e `alt` em todas as imagens.
+- Ao final, rode um Lighthouse em mobile e me mostre os números.
+
+---
+
+## Ordem das etapas (pare ao fim de cada uma)
+
+1. Ler o projeto e me devolver stack, estado atual e plano.
+2. Fundação: tokens de cor, fontes, fundo quadriculado, Lenis e regra de movimento reduzido.
+3. Header liquid glass e rodapé.
+4. Hero: Special Text, glitch e digitação.
+5. Cards dos tipos de projeto (#08).
+6. Projetos em destaque com moldura de navegador.
+7. Páginas de tipo de projeto.
+8. Feedbacks e formulário.
+9. Revisão no celular, acessibilidade e Lighthouse.
+
+Comece pela etapa 1.

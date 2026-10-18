@@ -1,8 +1,8 @@
 import { Hero } from "@/components/sections/Hero";
-import { Frentes } from "@/components/sections/Frentes";
+import { CardsTipos } from "@/components/sections/CardsTipos";
 import { Destaques } from "@/components/sections/Destaques";
-import { Processo } from "@/components/sections/Processo";
-import { Equipe } from "@/components/sections/Equipe";
+import { ProblemaSistema } from "@/components/sections/ProblemaSistema";
+import { Local } from "@/components/sections/Local";
 import { Depoimentos } from "@/components/sections/Depoimentos";
 import { ChamadaFinal } from "@/components/sections/ChamadaFinal";
 
@@ -10,10 +10,10 @@ export default function Inicio() {
   return (
     <>
       <Hero />
-      <Frentes />
+      <CardsTipos />
       <Destaques />
-      <Processo />
-      <Equipe />
+      <ProblemaSistema />
+      <Local />
       <Depoimentos />
       <ChamadaFinal />
     </>

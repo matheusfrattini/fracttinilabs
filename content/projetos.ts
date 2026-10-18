@@ -14,7 +14,7 @@
  *   - `emDestaque: true` faz o projeto aparecer também no Início.
  */
 
-export type Categoria = "dashboard" | "site" | "automacao";
+export type Categoria = "dashboard" | "site" | "automacao" | "app";
 
 export type Projeto = {
   slug: string;
@@ -39,7 +39,8 @@ export const categorias: { id: Categoria | "todos"; rotulo: string }[] = [
   { id: "todos", rotulo: "Todos" },
   { id: "dashboard", rotulo: "Sistemas e dashboards" },
   { id: "automacao", rotulo: "Automações com IA" },
-  { id: "site", rotulo: "Sites" },
+  { id: "site", rotulo: "Web design" },
+  { id: "app", rotulo: "Aplicativos e softwares" },
 ];
 
 const vazio = {
