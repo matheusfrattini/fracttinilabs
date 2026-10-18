@@ -35,9 +35,21 @@ jobs:
       # Ligar o Pages tem que ser feito uma vez em
       # Settings > Pages > Source: GitHub Actions — o GITHUB_TOKEN do
       # workflow não tem permissão para fazer isso sozinho.
+      # continue-on-error: enquanto o Pages não estiver ligado, este passo
+      # falha ("Get Pages site failed"). Deixando passar, o build e as
+      # verificações continuam rodando como CI normal, e só o job de deploy
+      # fica bloqueado — com uma mensagem clara do que falta.
       - name: Configurar Pages
         id: pages
+        continue-on-error: true
         uses: actions/configure-pages@v5
+
+      - name: Avisar se o Pages ainda não foi ligado
+        if: steps.pages.outcome == 'failure'
+        run: |
+          echo "::warning::GitHub Pages ainda não está ligado neste repositório."
+          echo "::warning::Ligue em Settings > Pages > Source: GitHub Actions e rode o workflow de novo."
+
 
       - run: npm ci
 
