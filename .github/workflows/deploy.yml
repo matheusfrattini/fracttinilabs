@@ -31,13 +31,13 @@ jobs:
           node-version: 22
           cache: npm
 
-      # enablement: true liga o Pages na primeira execução, se ainda
-      # não estiver ligado no repositório.
+      # Só LÊ a configuração do Pages (de onde sai o base_path).
+      # Ligar o Pages tem que ser feito uma vez em
+      # Settings > Pages > Source: GitHub Actions — o GITHUB_TOKEN do
+      # workflow não tem permissão para fazer isso sozinho.
       - name: Configurar Pages
         id: pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - run: npm ci
 
@@ -48,7 +48,8 @@ jobs:
 
       - name: Build estático
         env:
-          NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          # fallback para o nome do repositório, caso o output venha vazio
+          NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path || format('/{0}', github.event.repository.name) }}
         run: npm run build
 
       - uses: actions/upload-pages-artifact@v3
