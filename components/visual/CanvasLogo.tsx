@@ -4,6 +4,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, Float, Lightformer, PresentationControls, useGLTF } from "@react-three/drei";
 import { Suspense, useMemo, useRef } from "react";
 import * as THREE from "three";
+import { caminho } from "@/lib/caminho";
 
 /**
  * A PARTE PESADA da logo 3D: three.js, fiber e drei (~230 kB).
@@ -12,7 +13,7 @@ import * as THREE from "three";
  * módulo quando vai realmente montar o canvas — assim o three.js não
  * entra no carregamento inicial da página.
  */
-const ARQUIVO = "/3d/logo.glb";
+const ARQUIVO = caminho("/3d/logo.glb");
 
 // Materiais por nome (vêm do .mtl original)
 function criarMateriais() {

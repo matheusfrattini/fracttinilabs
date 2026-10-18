@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
+import { caminho } from "@/lib/caminho";
+
 /**
  * Moldura de navegador com glow de gradiente atrás.
  *
@@ -44,7 +46,7 @@ export function Moldura({
         {/* conteúdo */}
         {src ? (
           <img
-            src={src}
+            src={caminho(src)}
             alt={`Tela do projeto ${nome}`}
             loading="lazy"
             decoding="async"

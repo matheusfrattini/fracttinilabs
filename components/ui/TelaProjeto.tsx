@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
+import { caminho } from "@/lib/caminho";
+
 /** Mostra a tela do projeto ou, sem imagem ainda, uma moldura neutra. */
 export function TelaProjeto({ src, nome }: { src?: string; nome: string }) {
   if (!src) {
@@ -9,5 +11,5 @@ export function TelaProjeto({ src, nome }: { src?: string; nome: string }) {
       </div>
     );
   }
-  return <img src={src} alt={`Tela do projeto ${nome}`} loading="lazy" className="aspect-[16/10] w-full object-cover object-top" />;
+  return <img src={caminho(src)} alt={`Tela do projeto ${nome}`} loading="lazy" className="aspect-[16/10] w-full object-cover object-top" />;
 }

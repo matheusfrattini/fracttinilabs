@@ -1,0 +1,66 @@
+# Publica o site estático no GitHub Pages a cada push na main.
+#
+# O site fica em https://<usuario>.github.io/<repo>/, ou seja, num
+# subcaminho — por isso NEXT_PUBLIC_BASE_PATH. Sem ele, todo asset
+# em /_next e /3d daria 404.
+name: Deploy no GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Uma publicação por vez; não cancela a que já está rodando.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # enablement: true liga o Pages na primeira execução, se ainda
+      # não estiver ligado no repositório.
+      - name: Configurar Pages
+        id: pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - run: npm ci
+
+      - name: Verificar tipos e lint
+        run: |
+          npx tsc --noEmit
+          npx eslint .
+
+      - name: Build estático
+        env:
+          NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

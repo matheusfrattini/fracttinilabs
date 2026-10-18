@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
+import { caminho } from "@/lib/caminho";
 
 /**
  * Logo 3D (public/3d/logo.glb — convertido do infinity-logo.obj e
@@ -83,7 +84,7 @@ export default function Logo3D({ className = "" }: { className?: string }) {
           decoracao e sai da arvore de acessibilidade. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/3d/logo.png"
+        src={caminho("/3d/logo.png")}
         alt={modo === "3d" ? "" : "Logo da fracttini.labs"}
         aria-hidden={modo === "3d" || undefined}
         className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-500 ${
