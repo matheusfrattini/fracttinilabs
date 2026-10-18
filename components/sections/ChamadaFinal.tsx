@@ -8,9 +8,9 @@ export function ChamadaFinal() {
         <div aria-hidden className="absolute -top-32 -right-24 size-96 rounded-full bg-brand/20 blur-[90px]" />
         <div className="relative grid items-center gap-10 md:grid-cols-[1.4fr_1fr]">
           <div>
-            <h2 className="titulo-secao max-w-2xl">Onde o seu negócio trava hoje?</h2>
+            <h2 className="titulo-secao max-w-2xl">A primeira conversa é só sobre o seu negócio.</h2>
             <p className="texto-leitura mt-5 text-[17px] leading-relaxed text-muted">
-              Conta pra gente em poucas linhas. A primeira conversa é pra entender o problema — sem compromisso e sem pacote pronto.
+              Conta pra gente em poucas linhas onde trava. Sem compromisso e sem pacote pronto.
             </p>
             <div className="mt-10">
               <Botao href="/contato/">Nos conta o problema</Botao>
