@@ -1,10 +1,8 @@
-import Link from "next/link";
 import { emFrase, type Tipo } from "@/content/tipos";
 import { projetos } from "@/content/projetos";
-import { visiveis, emDev } from "@/lib/publicar";
+import { visiveis } from "@/lib/publicar";
 import { Secao } from "@/components/ui/Secao";
-import { Selo } from "@/components/ui/Selo";
-import { Moldura } from "@/components/ui/Moldura";
+import { GradeProjetos } from "./GradeProjetos";
 import { Maquina } from "@/components/motion/Maquina";
 import { ChamadaFinal } from "./ChamadaFinal";
 
@@ -52,36 +50,7 @@ export function PaginaTipo({ tipo }: { tipo: Tipo }) {
             [PROJETOS PENDENTES] — nenhum projeto desta frente está publicado ainda.
           </p>
         ) : (
-          <ul className="grid gap-8 sm:grid-cols-2">
-            {lista.map((p) => {
-              const externo = p.status === "em-construcao" && p.link;
-              const destino = externo ? p.link! : `/projetos/#${p.slug}`;
-              return (
-                <li key={p.slug}>
-                  <Link
-                    href={destino}
-                    {...(externo ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                    className="card-hover group flex h-full flex-col rounded-[var(--radius-card)] border border-transparent p-2 hover:border-line"
-                  >
-                    <Moldura
-                      src={p.telas[0]}
-                      nome={p.nome}
-                      endereco={externo ? new URL(p.link!).host : undefined}
-                      glow={false}
-                    />
-                    <div className="flex flex-1 flex-col px-2 pt-6 pb-4">
-                      <div className="mb-3 flex flex-wrap gap-2">
-                        <Selo tipo={p.status} />
-                        {emDev && !p.publicar && <Selo tipo="rascunho" />}
-                      </div>
-                      <h3 className="text-[1.35rem]">{p.nome}</h3>
-                      <p className="mt-2.5 text-[15px] leading-relaxed text-muted">{p.resumo}</p>
-                    </div>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+          <GradeProjetos projetos={lista} />
         )}
       </Secao>
 

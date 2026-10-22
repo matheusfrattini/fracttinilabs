@@ -92,7 +92,7 @@ function Caso({ projeto: p, aberto, alternar, rascunho }: { projeto: Projeto; ab
         className="grid w-full gap-4 p-5 text-left sm:grid-cols-[220px_1fr_auto] sm:items-center sm:gap-6"
       >
         <div className="overflow-hidden rounded-xl ring-1 ring-line">
-          <Moldura src={p.telas[0]} nome={p.nome} />
+          <Moldura src={p.telas[0]?.src} nome={p.nome} />
         </div>
         <div className="min-w-0">
           <div className="mb-2 flex flex-wrap items-center gap-2">
@@ -147,7 +147,7 @@ function Caso({ projeto: p, aberto, alternar, rascunho }: { projeto: Projeto; ab
 
               {p.telas.length > 1 && (
                 <div className="grid gap-4 sm:grid-cols-2 md:col-span-2">
-                  {p.telas.slice(1).map((src) => (
+                  {p.telas.slice(1).map(({ src }) => (
                     <div key={src} className="overflow-hidden rounded-xl ring-1 ring-line">
                       <TelaProjeto src={src} nome={p.nome} />
                     </div>

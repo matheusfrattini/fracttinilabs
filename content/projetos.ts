@@ -16,6 +16,16 @@
 
 export type Categoria = "dashboard" | "site" | "automacao" | "app";
 
+/**
+ * Uma tela do projeto, para o carrossel do pop-up de apresentação.
+ * A legenda diz o que a pessoa está vendo, não o nome do arquivo.
+ * Ex.: "Painel do dia, com os pedidos em aberto".
+ */
+export type Tela = {
+  src: string;
+  legenda: string;
+};
+
 export type Projeto = {
   slug: string;
   nome: string;
@@ -29,7 +39,8 @@ export type Projeto = {
   problema: string;
   oQueFizemos: string[];
   destaque?: { titulo: string; texto: string };
-  telas: string[];
+  /** 2 a 4 telas para o pop-up. A primeira também vira a capa do card. */
+  telas: Tela[];
   link?: string;
   emDestaque?: boolean;
   publicar: boolean;
@@ -49,7 +60,7 @@ const vazio = {
   ano: 2026,
   problema: "PREENCHER: o que travava o negócio do cliente, com contexto real.",
   oQueFizemos: ["PREENCHER: entrega 1", "PREENCHER: entrega 2", "PREENCHER: entrega 3"],
-  telas: [] as string[],
+  telas: [] as Tela[],
   publicar: false,
 };
 

@@ -34,7 +34,7 @@ export function Destaques() {
                 className="card-hover group flex h-full flex-col rounded-[var(--radius-card)] border border-transparent p-2 hover:border-line"
               >
                 <Moldura
-                  src={p.telas[0]}
+                  src={p.telas[0]?.src}
                   nome={p.nome}
                   endereco={externo ? new URL(p.link!).host : undefined}
                   glow={false}
